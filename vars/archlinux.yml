@@ -1,0 +1,13 @@
+---
+
+chrony_defaults_service:
+  name: chronyd
+  executable: /usr/bin/chronyd
+  state: started
+  enable: true
+
+chrony_system_config:
+  template: sysconfig/chrony.j2
+  file: /etc/sysconfig/chronyd
+
+...

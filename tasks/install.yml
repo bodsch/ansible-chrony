@@ -1,0 +1,24 @@
+---
+
+- name: install package
+  package:
+    name: "{{ chrony_packages }}"
+    state: present
+
+- name: disable conflicting services
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  register: disable_service_result
+  failed_when:
+    - disable_service_result is failed
+    - not 'Could not find the requested service' in disable_service_result.msg
+  loop:
+    - ntp
+    - ntpd
+    - ntpsec
+    - openntpd
+    - systemd-timesyncd
+
+...

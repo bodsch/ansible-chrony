@@ -1,0 +1,16 @@
+---
+
+- name: daemon-reload
+  become: true
+  systemd:
+    daemon_reload: true
+    force: true
+  when:
+    - ansible_service_mgr == 'systemd'
+
+- name: restart chrony
+  service:
+    name: "{{ chrony_service.name }}"
+    state: restarted
+
+...

@@ -1,0 +1,62 @@
+---
+
+- name: create logging directory
+  file:
+    path: "{{ chrony_config.log.directory }}"
+    state: directory
+    owner: "{{ chrony_user }}"
+    group: "{{ chrony_group }}"
+    mode: 0755
+
+- name: create sysconfig directory
+  file:
+    path: "{{ chrony_system_config.file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create configuration directory
+  file:
+    path: "{{ chrony_config.conf_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  when:
+    - chrony_config.conf_directory is defined
+    - chrony_config.conf_directory | length > 0
+
+- name: create default config
+  template:
+    src: "{{ chrony_system_config.template }}"
+    dest: "{{ chrony_system_config.file }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart chrony
+
+- name: create configuration directory
+  file:
+    path: "{{ chrony_config_file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create chrony configuration
+  template:
+    src: chrony.conf.j2
+    dest: "{{ chrony_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify:
+    - restart chrony
+
+- name: flush handlers
+  meta: flush_handlers
+
+...

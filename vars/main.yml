@@ -1,0 +1,68 @@
+---
+
+chrony_dependencies: []
+
+chrony_packages:
+  - chrony
+
+# ---------------------------------------------------------------------------------------
+
+chrony_defaults_service:
+  name: chrony
+  executable: /usr/sbin/chronyd
+  state: started
+  enable: true
+
+chrony_defaults_config:
+  conf_directory: /etc/chrony/conf.d
+  log:
+    # Select which information is logged.
+    types: []
+#      - tracking
+#      - measurements
+#      - statistics
+    # Specify directory for log files.
+    directory: /var/log/chrony
+  # Record the rate at which the system clock gains/losses time.
+  drift_file: /var/lib/chrony/chrony.drift
+  # Specify file containing keys for NTP authentication.
+  key_file: /etc/chrony/chrony.keys
+  nts_dump_directory: /var/lib/chrony
+  source_directories: []
+#    - /run/chrony-dhcp
+#    - /etc/chrony/sources.d
+  ntp_servers: []
+  # Use public servers from the pool.ntp.org project.
+  # Please consider joining the pool (http://www.pool.ntp.org/join.html).
+  ntp_pools:
+    - pool.ntp.org iburst maxpoll 10
+  ntp_peers: []
+  # Allow the system clock to be stepped in the first ten updates
+  # if its offset is larger than 1 second.
+  makestep:
+    threshold: 1
+    limit: 10
+  rtc:
+    # Enable kernel synchronization of the real-time clock (RTC).
+    sync: true
+    on_utc: true
+  # Get TAI-UTC offset and leap seconds from the system tz database.
+  leap_sec_tz: right/UTC
+  bind_cmd_addresses:
+    - 127.0.0.1
+    - ::1
+  # Allow NTP client access from local network.
+  allow: []
+  deny: []
+
+chrony_user: "chrony"
+chrony_group: "chrony"
+
+chrony_system_config:
+  template: default/chrony.j2
+  file: /etc/default/chrony
+
+chrony_config_file: /etc/chrony/chrony.conf
+# chrony_config_driftfile: /var/lib/chrony/chrony.drift
+
+...

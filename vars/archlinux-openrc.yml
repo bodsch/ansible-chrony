@@ -1,0 +1,9 @@
+---
+
+chrony_packages:
+  - chrony
+  - chrony-openrc
+
+chrony_config_driftfile: /var/lib/chrony/drift
+
+...
