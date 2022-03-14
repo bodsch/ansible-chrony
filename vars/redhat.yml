@@ -13,8 +13,4 @@ chrony_system_config:
   template: sysconfig/chrony.j2
   file: /etc/sysconfig/chronyd
 
-# chrony_config_file: /etc/chrony.conf
-# chrony_config_driftfile: /var/lib/chrony/drift
-
 ...
-

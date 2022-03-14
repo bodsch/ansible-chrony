@@ -130,7 +130,7 @@ def test_service(host, get_vars):
     print(get_vars.get("chrony_defaults_service", {}).get("name"))
     service = host.service(
         get_vars.get("chrony_defaults_service", {}).get("name")
-      )
+    )
     assert service.is_enabled
     assert service.is_running
 

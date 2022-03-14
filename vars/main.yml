@@ -18,9 +18,9 @@ chrony_defaults_config:
   log:
     # Select which information is logged.
     types: []
-#      - tracking
-#      - measurements
-#      - statistics
+    #  - tracking
+    #  - measurements
+    #  - statistics
     # Specify directory for log files.
     directory: /var/log/chrony
   # Record the rate at which the system clock gains/losses time.
@@ -29,8 +29,8 @@ chrony_defaults_config:
   key_file: /etc/chrony/chrony.keys
   nts_dump_directory: /var/lib/chrony
   source_directories: []
-#    - /run/chrony-dhcp
-#    - /etc/chrony/sources.d
+  #  - /run/chrony-dhcp
+  #  - /etc/chrony/sources.d
   ntp_servers: []
   # Use public servers from the pool.ntp.org project.
   # Please consider joining the pool (http://www.pool.ntp.org/join.html).
