@@ -20,6 +20,8 @@ platforms:
     pre_build_image: true
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_TIME
 
 provisioner:
   name: ansible

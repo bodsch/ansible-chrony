@@ -3,7 +3,7 @@
 # the chrony daemon without editing the init script or service file.
 
 # Options to pass to chrony.
-DAEMON_OPTS="-F 1 -U -l {{ chrony_config.log.directory }}/chrony.log -f {{ chrony_config_file }} -r"
+DAEMON_OPTS="-F 1 -l {{ chrony_config.log.directory }}/chrony.log -f {{ chrony_config_file }} -r"
 
 # /usr/sbin/chronyd --help
 # Usage: /usr/sbin/chronyd [OPTION]... [DIRECTIVE]...

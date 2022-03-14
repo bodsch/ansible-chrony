@@ -6,7 +6,15 @@
     state: directory
     owner: "{{ chrony_user }}"
     group: "{{ chrony_group }}"
-    mode: 0755
+    mode: 0775
+
+- name: create logfile
+  file:
+    path: "{{ chrony_config.log.directory }}/chrony.log"
+    state: touch
+    owner: "{{ chrony_user }}"
+    group: "{{ chrony_group }}"
+    mode: 0666
 
 - name: create sysconfig directory
   file:

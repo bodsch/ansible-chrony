@@ -1,9 +1,14 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
 # {{ ansible_managed }}
 
-{% if chrony_config.conf_directory is defined and
-      chrony_config.conf_directory | string | length > 0 %}
+{% if not (ansible_distribution | lower == "debian" and
+           ansible_distribution_major_version | int == 10) and
+      not (ansible_distribution | lower == "ubuntu" and
+           ansible_distribution_major_version | int in [18, 20]) %}
+  {% if chrony_config.conf_directory is defined and
+        chrony_config.conf_directory | string | length > 0 %}
 confdir {{ chrony_config.conf_directory }}
+  {% endif %}
 {% endif %}
 
 {% if chrony_config.drift_file is defined and
@@ -16,9 +21,14 @@ driftfile {{ chrony_config.drift_file }}
 keyfile {{ chrony_config.key_file }}
 {% endif %}
 
-{% if chrony_config.nts_dump_directory is defined and
-      chrony_config.nts_dump_directory | string | length > 0 %}
+{% if not (ansible_distribution | lower == "debian" and
+           ansible_distribution_major_version | int == 10) and
+      not (ansible_distribution | lower == "ubuntu" and
+           ansible_distribution_major_version | int in [18, 20]) %}
+  {% if chrony_config.nts_dump_directory is defined and
+        chrony_config.nts_dump_directory | string | length > 0 %}
 ntsdumpdir {{ chrony_config.nts_dump_directory }}
+  {% endif %}
 {% endif %}
 
 {% if chrony_config.source_directories is defined and
