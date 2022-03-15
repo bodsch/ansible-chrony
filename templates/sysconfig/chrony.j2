@@ -1,33 +1,5 @@
-# This is a configuration file for /etc/init.d/chrony and
-# /lib/systemd/system/chrony.service; it allows you to pass various options to
-# the chrony daemon without editing the init script or service file.
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
 
 # Options to pass to chrony.
 OPTIONS="-F 1 -U -l {{ chrony_config.log.directory }}/chrony.log -f {{ chrony_config_file }} -r"
-
-# /usr/sbin/chronyd --help
-# Usage: /usr/sbin/chronyd [OPTION]... [DIRECTIVE]...
-#
-# Options:
-#   -4            Use IPv4 addresses only
-#   -6            Use IPv6 addresses only
-#   -f FILE       Specify configuration file (/etc/chrony/chrony.conf)
-#   -n            Don't run as daemon
-#   -d            Don't run as daemon and log to stderr
-#   -l FILE       Log to file
-#   -L LEVEL      Set logging threshold (0)
-#   -p            Print configuration and exit
-#   -q            Set clock and exit
-#   -Q            Log offset and exit
-#   -r            Reload dump files
-#   -R            Adapt configuration for restart
-#   -s            Set clock from RTC
-#   -t SECONDS    Exit after elapsed time
-#   -u USER       Specify user (_chrony)
-#   -U            Don't check for root
-#   -F LEVEL      Set system call filter level (0)
-#   -P PRIORITY   Set process priority (0)
-#   -m            Lock memory
-#   -x            Don't control clock
-#   -v, --version Print version and exit
-#   -h, --help    Print usage and exit
