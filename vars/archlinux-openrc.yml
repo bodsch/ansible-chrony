@@ -4,6 +4,14 @@ chrony_packages:
   - chrony
   - chrony-openrc
 
-chrony_config_driftfile: /var/lib/chrony/drift
+chrony_defaults_service:
+  name: chronyd
+  executable: /usr/bin/chronyd
+  state: started
+  enable: true
+
+chrony_system_config:
+  template: default/chrony.j2
+  file: /etc/default/chronyd
 
 ...

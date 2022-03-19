@@ -3,4 +3,7 @@
 chrony_service: {}
 
 chrony_config: {}
+
+chrony_daemon_args: {}
+
 ...

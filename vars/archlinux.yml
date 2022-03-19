@@ -7,7 +7,7 @@ chrony_defaults_service:
   enable: true
 
 chrony_system_config:
-  template: sysconfig/chrony.j2
-  file: /etc/sysconfig/chronyd
+  template: default/chrony.j2
+  file: /etc/default/chronyd
 
 ...

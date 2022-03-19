@@ -39,4 +39,9 @@
     chrony_config: "{{ chrony_defaults_config |
       combine( chrony_config, recursive=True ) }}"
 
+- name: merge chrony deamon configuration between defaults and custom
+  set_fact:
+    chrony_daemon_args: "{{ chrony_defaults_daemon_args |
+      combine( chrony_daemon_args, recursive=True ) }}"
+
 ...
