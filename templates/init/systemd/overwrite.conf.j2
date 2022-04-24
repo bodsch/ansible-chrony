@@ -4,7 +4,7 @@ EnvironmentFile         = -{{ chrony_system_config.file }}
 
 ExecStartPre            = mkdir -vp /run/chrony
 ExecStartPre            = chmod g+rwx,o-rwx /run/chrony
-ExecStartPre            = chown chrony: /run/chrony
+ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
 
 ExecStartPre            = /bin/bash -l -c 'echo "{{ chrony_service.executable }} $DAEMON_OPTS" > /tmp/systemd_chrony.debug'
 ExecStartPre            = /bin/bash -l -c 'echo $DAEMON_OPTS >> /tmp/systemd_chrony.debug'
