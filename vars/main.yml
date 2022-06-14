@@ -39,7 +39,7 @@ chrony_defaults_daemon_args:
   # -x
   control_clock: ""  # | true / false
   # -u USER       Specify user (_chrony)
-  run_as_user: chrony
+  run_as_user: "{{ chrony_user }}"
   # -U
   dont_check_for_root: ""  # | true / false
 

@@ -25,6 +25,8 @@ Tested on
 chrony_service: {}
 
 chrony_config: {}
+
+chrony_daemon_args: {}
 ```
 
 #### defaults
@@ -66,10 +68,39 @@ chrony_config:
     - ::1
   allow: []
   deny: []
+
+chrony_daemon_args:
+  # -4
+  use_ipv4_only: ""  # | true / false
+  # -6
+  use_ipv6_only: ""  # | true / false
+  # -n
+  run_as_daemon: ""  # | true / false
+  # -d
+  run_as_daemon_and_log_to_stderr: ""  # | true / false
+  # -L level
+  # 0 (informational), 1 (warning), 2 (non-fatal error), and 3 (fatal error)
+  logging_threshold: 0  # | 0
+  # -r
+  reload_dump_files: true
+  # -F level
+  # Three levels are defined: 0, 1, 2.
+  seccomp_filter_level: 2
+  # -P priority
+  process_priority: 0
+  # -m
+  lock_memory: ""  # | true / false
+  # -x
+  control_clock: ""  # | true / false
+  # -u USER       Specify user (_chrony)
+  run_as_user: "{{ chrony_user }}"
+  # -U
+  dont_check_for_root: ""  # | true / false
 ```
 
+
 [example](molecule/default/group_vars/all/vars.yml)
-    
+
     
 ## Contribution
 
