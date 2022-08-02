@@ -5,7 +5,7 @@ chrony_packages:
   - chrony-openrc
 
 chrony_defaults_service:
-  name: chronyd
+  name: chrony
   executable: /usr/bin/chronyd
   state: started
   enable: true
