@@ -7,11 +7,6 @@
     NETRC: ''
 
   pre_tasks:
-    - name: update pacman system
-      command: |
-        pacman --refresh --sync --sysupgrade --noconfirm
-      when:
-        - ansible_distribution | lower == 'archlinux'
 
     - debug:
         msg:

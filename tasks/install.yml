@@ -5,6 +5,26 @@
     name: "{{ chrony_packages }}"
     state: present
 
+- name: get information
+  chrony:
+    command: "{{ chrony_service.executable }}"
+    parameters:
+      - --version
+  register: chrony_information
+
+- name: define chrony version
+  set_fact:
+    chrony_version: "{{ chrony_information.version }}"
+    chrony_major_version: "{{ chrony_information.major_version }}"
+  when:
+    - chrony_information.rc == 0
+
+- name: create local facts
+  template:
+    src: ansible_facts.j2
+    dest: /etc/ansible/facts.d/chrony.fact
+    mode: 0755
+
 - name: disable conflicting services
   service:
     name: "{{ item }}"

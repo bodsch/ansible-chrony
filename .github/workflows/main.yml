@@ -35,31 +35,26 @@ jobs:
           VALIDATE_YAML: true
 
   arch:
-    name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
     needs:
       - lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         image:
           - archlinux:latest
-        python-version:
-          - '3.9'
         ansible-version:
-          - '4.1.0'
-          - '5.1.0'
+          - '5.1'
+          - '6.1'
+        scenario:
+          - default
 
     steps:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
           path: 'ansible-chrony'
-
-      - name: set up python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: install dependencies
         run: |
@@ -68,18 +63,18 @@ jobs:
 
       - name: test with tox
         run: |
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') \
-            -- molecule test --scenario-name default
+          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
+            -- molecule test --scenario-name "${{ matrix.scenario }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           DISTRIBUTION: ${{ matrix.image }}
 
   deb:
-    name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
     needs:
       - lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -87,22 +82,17 @@ jobs:
           - debian:10
           - debian:11
           - ubuntu:20.04
-        python-version:
-          - '3.9'
         ansible-version:
-          - '4.1.0'
-          - '5.1.0'
+          - '5.1'
+          - '6.1'
+        scenario:
+          - default
 
     steps:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
           path: 'ansible-chrony'
-
-      - name: set up python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: install dependencies
         run: |
@@ -111,18 +101,18 @@ jobs:
 
       - name: test with tox
         run: |
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') \
-            -- molecule test --scenario-name default
+          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
+            -- molecule test --scenario-name "${{ matrix.scenario }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           DISTRIBUTION: ${{ matrix.image }}
 
   rpm:
-    name: "${{ matrix.image }} / python: ${{ matrix.python-version }}, ansible: ${{ matrix.ansible-version }}"
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
     needs:
       - lint
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -130,22 +120,17 @@ jobs:
           - oraclelinux:8
           - rockylinux:8
           - almalinux:8
-        python-version:
-          - '3.9'
         ansible-version:
-          - '4.1.0'
-          - '5.1.0'
+          - '4.10'
+          - '5.1'
+        scenario:
+          - default
 
     steps:
       - name: check out the codebase.
         uses: actions/checkout@v2
         with:
           path: 'ansible-chrony'
-
-      - name: set up python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: install dependencies
         run: |
@@ -154,8 +139,8 @@ jobs:
 
       - name: test with tox
         run: |
-          tox -e py$(printf "${{ matrix.python-version }}" | tr -d '.')-ansible$(printf "${{ matrix.ansible-version }}" | tr -d '.') \
-            -- molecule test --scenario-name default
+          tox -e ansible_$(printf "${{ matrix.ansible-version }}") \
+            -- molecule test --scenario-name "${{ matrix.scenario }}"
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
@@ -166,10 +151,10 @@ jobs:
     needs:
       - arch
       - deb
-      - rpm
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: galaxy
-        uses: robertdebock/galaxy-action@1.1.0
+        uses: robertdebock/galaxy-action@1.2.1
         with:
           galaxy_api_key: ${{ secrets.galaxy_api_key }}
+          git_branch: main
