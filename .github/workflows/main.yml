@@ -66,7 +66,7 @@ jobs:
           make \
             test \
             -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="${{ matrix.ansible-version }}" \
+            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
             -e TOX_VERBOSE="-v" \
             -e DISTRIBUTION="${{ matrix.image }}"
 
@@ -109,7 +109,7 @@ jobs:
           make \
             test \
             -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="${{ matrix.ansible-version }}" \
+            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
             -e TOX_VERBOSE="-v" \
             -e DISTRIBUTION="${{ matrix.image }}"
 
