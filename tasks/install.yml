@@ -40,5 +40,10 @@
     - ntpsec
     - openntpd
     - systemd-timesyncd
+  notify:
+    - daemon-reload
+
+- name: flush handlers at this point to avoid double restart
+  meta: flush_handlers
 
 ...

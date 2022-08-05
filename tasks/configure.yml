@@ -75,7 +75,4 @@
   when:
     - ansible_service_mgr | lower == "systemd"
 
-- name: flush handlers
-  meta: flush_handlers
-
 ...

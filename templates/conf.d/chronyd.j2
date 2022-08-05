@@ -1,6 +1,9 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+#
 # /etc/conf.d/chronyd
 
-CFGFILE="{{ chrony_config_file }}" # /etc/chrony.conf"
+CFGFILE="{{ chrony_config_file }}"
 
 # chronyd takes some time to perform a second fork, by enabling this
 # option chronyd is deamonized through start-stop-daemon(1) thereby
@@ -14,4 +17,9 @@ FAST_STARTUP=yes
 # The combination of "-s -r" allows chronyd to perform long term averaging of
 # the gain or loss rate across system reboots and shutdowns.
 
-ARGS="-l {{ chrony_config.log.directory }}/chrony.log -f {{ chrony_config_file }} -n -r"
+ARGS="
+  -l {{ chrony_config.log.directory }}/chrony.log \
+  -f {{ chrony_config_file }} \
+  -n \
+  -r
+"
