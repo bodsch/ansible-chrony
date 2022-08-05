@@ -145,7 +145,7 @@ def test_service(host, get_vars):
 def test_open_port(host, get_vars):
     """
     """
-    version = local_facts(host).get("major_version")
+    # version = local_facts(host).get("major_version")
 
     for i in host.socket.get_listening_sockets():
         print(i)
@@ -153,6 +153,6 @@ def test_open_port(host, get_vars):
     service = host.socket("udp://{0}:{1}".format("127.0.0.1", "323"))
     assert service.is_listening
 
-    #if int(version) > 3:
-    #    service = host.socket("udp://{0}:{1}".format("0.0.0.0", "123"))
-    #    assert service.is_listening
+    # if int(version) > 3:
+    #     service = host.socket("udp://{0}:{1}".format("0.0.0.0", "123"))
+    #     assert service.is_listening
