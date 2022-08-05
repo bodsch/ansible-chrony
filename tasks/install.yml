@@ -41,6 +41,6 @@
     - openntpd
     - systemd-timesyncd
   notify:
-    - daemon-reload
+    - reload systemctl daemon
 
 ...

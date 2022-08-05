@@ -70,7 +70,7 @@
         dest: "/etc/systemd/system/chronyd.service.d/overwrite.conf"
         mode: 0444
       notify:
-        - daemon-reload
+        - reload systemctl daemon
         - restart chrony
   when:
     - ansible_service_mgr | lower == "systemd"
