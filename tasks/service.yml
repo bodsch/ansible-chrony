@@ -1,5 +1,8 @@
 ---
 
+- name: flush handlers at this point to avoid double restart
+  meta: flush_handlers
+
 - name: start and enable service
   service:
     name: "{{ chrony_service.name }}"
