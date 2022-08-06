@@ -6,9 +6,15 @@
   when:
     - ansible_service_mgr == 'systemd'
 
-- name: restart chrony
+- name: restart service
   service:
     name: "{{ chrony_service.name }}"
     state: restarted
+  ignore_errors: true
+  register: _WTF
+
+- name:
+  debug:
+    msg: "{{ _WTF }}"
 
 ...
