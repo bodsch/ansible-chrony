@@ -36,7 +36,7 @@ provisioner:
 
 scenario:
   test_sequence:
-    - lint
+    # - lint
     - destroy
     - dependency
     - syntax

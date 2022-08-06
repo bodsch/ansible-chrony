@@ -1,4 +1,6 @@
+---
 
 skip_list:
-  - role-name          # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
-  - yaml               # Violations reported by yamllint
+  # - role-name          # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
+  - var-naming
+  # - yaml               # Violations reported by yamllint

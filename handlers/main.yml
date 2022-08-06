@@ -13,7 +13,7 @@
   ignore_errors: true
   register: _WTF
 
-- name:
+- name: d
   debug:
     msg: "{{ _WTF }}"
 
