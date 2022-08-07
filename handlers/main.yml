@@ -11,10 +11,19 @@
     name: "{{ chrony_service.name }}"
     state: restarted
   ignore_errors: true
-  register: _WTF
+  register: _restart_result
 
 - name: d
   debug:
-    msg: "{{ _WTF }}"
+    msg: "{{ _restart_result }}"
+
+- name: journal
+  shell: |
+    journalctl -n 400
+  register: _restart_result
+
+- name: d
+  debug:
+    msg: "{{ _restart_result }}"
 
 ...
