@@ -12,5 +12,7 @@
     - configuration
     - chrony
     - chrony-start-enable-service
+  notify:
+    - journal
 
 ...

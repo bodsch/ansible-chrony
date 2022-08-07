@@ -12,8 +12,11 @@
     state: restarted
   ignore_errors: true
   register: _restart_result
+  notify:
+    - debug restart
+    - journal
 
-- name: d
+- name: debug restart
   debug:
     msg: "{{ _restart_result }}"
 
@@ -21,8 +24,10 @@
   shell: |
     journalctl -n 400
   register: _restart_result
+  notify:
+    - debug journal
 
-- name: d
+- name: debug journal
   debug:
     msg: "{{ _restart_result }}"
 
