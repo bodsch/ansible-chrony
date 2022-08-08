@@ -1,13 +1,12 @@
 ---
 
+- name: flush handlers at this point to avoid double restart
+  meta: flush_handlers
+
 - name: start and enable service
   service:
     name: "{{ chrony_service.name }}"
     state: "{{ chrony_service.state | default('started') }}"
     enabled: "{{ chrony_service.enabled | default(true) | bool }}"
-  tags:
-    - configuration
-    - chrony
-    - chrony-start-enable-service
 
 ...

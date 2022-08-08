@@ -7,6 +7,9 @@ export TOX_ANSIBLE   ?= ansible_6.1
 
 default: converge
 
+test:
+	@hooks/test
+
 converge:
 	@hooks/converge
 

@@ -18,7 +18,10 @@ FAST_STARTUP=yes
 # the gain or loss rate across system reboots and shutdowns.
 
 ARGS="
+  {% if chrony_config.log.directory is defined and
+        chrony_config.log.directory | string | length > 0 %}
   -l {{ chrony_config.log.directory }}/chrony.log \
+  {% endif %}
   -f {{ chrony_config_file }} \
   -n \
   -r
