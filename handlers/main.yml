@@ -17,6 +17,6 @@
 
 - name: debug restart
   debug:
-    msg: "{{ _restart_result.stdout }}"
+    msg: "{{ _restart_result }}"
 
 ...
