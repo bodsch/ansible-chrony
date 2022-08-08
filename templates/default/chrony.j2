@@ -18,7 +18,10 @@ DAEMON_OPTS="
       not chrony_daemon_args.run_as_daemon %}
   -d \
 {% endif %}
+{% if chrony_config.log.directory is defined and
+      chrony_config.log.directory | string | length > 0 %}
   -l {{ chrony_config.log.directory }}/chrony.log \
+{% endif %}
 {% if chrony_major_version | int >= 4 %}
   {% if chrony_daemon_args.logging_threshold is defined and
         chrony_daemon_args.logging_threshold | string | length > 0 and

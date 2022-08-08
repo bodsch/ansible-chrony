@@ -8,7 +8,7 @@ ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
 {% if chrony_config.log.directory is defined and
       chrony_config.log.directory | string | length > 0 %}
 ExecStartPre            = chown --recursive {{ chrony_user }}:{{ chrony_group }} {{ chrony_config.log.directory }}
-ExecStartPre            = chmod u+rwx,g+rwx,o-rwx {{ chrony_config.log.directory }}/*
+ExecStartPre            = chmod u+rwx,g+rwx,o-rwx {{ chrony_config.log.directory }}/chrony.log 2> /dev/null
 {% endif %}
 
 
