@@ -12,8 +12,8 @@
   register: _restart_result
 
 - name: journal
-  shell: |
-    journalctl -n 400
+  journalctl:
+    lines: 200
   register: _service_result
 
 - name: debug journal

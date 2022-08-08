@@ -5,6 +5,12 @@ EnvironmentFile         = -{{ chrony_system_config.file }}
 ExecStartPre            = mkdir -vp /run/chrony
 ExecStartPre            = chmod g+rwx,o-rwx /run/chrony
 ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
+{% if chrony_config.log.directory is defined and
+      chrony_config.log.directory | string | length > 0 %}
+ExecStartPre            = chown --recursive {{ chrony_user }}:{{ chrony_group }} {{ chrony_config.log.directory }}
+ExecStartPre            = chmod u+rwx,g+rwx,o-rwx {{ chrony_config.log.directory }}/*
+{% endif %}
+
 
 ExecStart               =
 ExecStart               = {{ chrony_service.executable }} $DAEMON_OPTS
