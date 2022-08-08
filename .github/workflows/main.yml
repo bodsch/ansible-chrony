@@ -15,24 +15,24 @@ defaults:
     working-directory: 'ansible-chrony'
 
 jobs:
-  lint:
-    name: linting
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: lint
-        uses: docker://ghcr.io/github/super-linter:slim-v4
-        env:
-          # DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GH_REGISTRY_TOKEN }}
-          VALIDATE_ALL_CODEBASE: true
-          VALIDATE_ANSIBLE: true
-          # VALIDATE_MARKDOWN: true
-          VALIDATE_YAML: true
+  # lint:
+  #   name: linting
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: lint
+  #       uses: docker://ghcr.io/github/super-linter:slim-v4
+  #       env:
+  #         # DEFAULT_BRANCH: master
+  #         GITHUB_TOKEN: ${{ secrets.GH_REGISTRY_TOKEN }}
+  #         VALIDATE_ALL_CODEBASE: true
+  #         VALIDATE_ANSIBLE: true
+  #         # VALIDATE_MARKDOWN: true
+  #         VALIDATE_YAML: true
 
   # arch:
   #   name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
@@ -77,8 +77,8 @@ jobs:
 
   deb:
     name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
-    needs:
-      - lint
+    #needs:
+    #  - lint
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -99,7 +99,7 @@ jobs:
         with:
           path: 'ansible-chrony'
 
-      - name: Disable AppArmor
+      - name: disable AppArmor
         run: |
             set -x
             sudo apt-get install apparmor-profiles
