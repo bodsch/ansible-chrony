@@ -10,13 +10,5 @@
   service:
     name: "{{ chrony_service.name }}"
     state: restarted
-  ignore_errors: true
-  register: _restart_result
-  notify:
-    - debug restart
-
-- name: debug restart
-  debug:
-    msg: "{{ _restart_result }}"
 
 ...

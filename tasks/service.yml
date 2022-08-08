@@ -8,16 +8,5 @@
     name: "{{ chrony_service.name }}"
     state: "{{ chrony_service.state | default('started') }}"
     enabled: "{{ chrony_service.enabled | default(true) | bool }}"
-  ignore_errors: true
-  register: _restart_result
-
-- name: journal
-  journalctl:
-    lines: 200
-  register: _service_result
-
-- name: debug journal
-  debug:
-    msg: "{{ _service_result.stdout }}"
 
 ...
