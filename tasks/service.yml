@@ -8,11 +8,16 @@
     name: "{{ chrony_service.name }}"
     state: "{{ chrony_service.state | default('started') }}"
     enabled: "{{ chrony_service.enabled | default(true) | bool }}"
-  tags:
-    - configuration
-    - chrony
-    - chrony-start-enable-service
-  notify:
-    - journal
+  ignore_errors: true
+  register: _restart_result
+
+- name: journal
+  shell: |
+    journalctl -n 400
+  register: _service_result
+
+- name: debug journal
+  debug:
+    msg: "{{ _service_result.stdout }}"
 
 ...

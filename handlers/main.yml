@@ -14,21 +14,9 @@
   register: _restart_result
   notify:
     - debug restart
-    - journal
 
 - name: debug restart
   debug:
-    msg: "{{ _restart_result }}"
-
-- name: journal
-  shell: |
-    journalctl -n 400
-  register: _restart_result
-  notify:
-    - debug journal
-
-- name: debug journal
-  debug:
-    msg: "{{ _restart_result }}"
+    msg: "{{ _restart_result.stdout }}"
 
 ...
