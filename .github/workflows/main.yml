@@ -99,6 +99,13 @@ jobs:
         with:
           path: 'ansible-chrony'
 
+      - name: Disable AppArmor
+        run: |
+            set -x
+            sudo apt-get install apparmor-profiles
+            sudo ln -s /etc/apparmor.d/usr.sbin.chronyd /etc/apparmor.d/disable/
+            sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.chronyd
+
       - name: install dependencies
         run: |
           python -m pip install --upgrade pip
