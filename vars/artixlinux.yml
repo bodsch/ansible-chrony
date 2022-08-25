@@ -1,0 +1,17 @@
+---
+
+chrony_packages:
+  - chrony
+  - chrony-openrc
+
+chrony_defaults_service:
+  name: chrony
+  executable: /usr/bin/chronyd
+  state: started
+  enable: true
+
+chrony_system_config:
+  template: default/chrony.j2
+  file: /etc/default/chronyd
+
+...
