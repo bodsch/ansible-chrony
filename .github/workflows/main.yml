@@ -2,43 +2,24 @@
 name: CI
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
-      - main
   schedule:
     - cron: "0 4 * * 0"
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "code linter"
+    types:
+      - completed
 
 defaults:
   run:
     working-directory: 'ansible-chrony'
 
 jobs:
-  lint:
-    name: linting
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: lint
-        uses: docker://ghcr.io/github/super-linter:slim-v4
-        env:
-          # DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GH_REGISTRY_TOKEN }}
-          VALIDATE_ALL_CODEBASE: true
-          VALIDATE_ANSIBLE: true
-          # VALIDATE_MARKDOWN: true
-          VALIDATE_YAML: true
-
   arch:
-    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
-    needs:
-      - lint
-    runs-on: ubuntu-latest
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
     strategy:
       fail-fast: false
       matrix:
@@ -55,6 +36,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: 'ansible-chrony'
+
+      - name: 🐍 set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
       - name: install dependencies
         run: |
@@ -75,17 +61,14 @@ jobs:
           DISTRIBUTION: ${{ matrix.image }}
 
   deb:
-    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
-    needs:
-      - lint
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
     runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
     strategy:
       fail-fast: false
       matrix:
         image:
-          #- debian:10
           - debian:11
-          #- ubuntu:20.04
         ansible-version:
           - '5.1'
           - '6.1'
@@ -97,6 +80,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: 'ansible-chrony'
+
+      - name: 🐍 set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
       - name: disable AppArmor
         run: |
@@ -124,10 +112,9 @@ jobs:
           DISTRIBUTION: ${{ matrix.image }}
 
   rpm:
-    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}, scenario: ${{ matrix.scenario }}"
-    needs:
-      - lint
-    runs-on: ubuntu-latest
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
     strategy:
       fail-fast: false
       matrix:
@@ -159,6 +146,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r test-requirements.txt
 
+      - name: 🐍 set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
       - name: test with tox
         run: |
           make \
@@ -171,16 +163,3 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           DISTRIBUTION: ${{ matrix.image }}
-
-  publish:
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - arch
-      - deb
-    runs-on: ubuntu-latest
-    steps:
-      - name: galaxy
-        uses: robertdebock/galaxy-action@1.2.1
-        with:
-          galaxy_api_key: ${{ secrets.galaxy_api_key }}
-          git_branch: main

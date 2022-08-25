@@ -43,7 +43,6 @@ chrony_defaults_daemon_args:
   # -U
   dont_check_for_root: ""  # | true / false
 
-
 chrony_defaults_config:
   conf_directory: /etc/chrony/conf.d
   log:
