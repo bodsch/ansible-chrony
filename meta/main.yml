@@ -14,10 +14,7 @@ galaxy_info:
     - name: ArchLinux
     - name: Debian
       versions:
-        - all
-    - name: Ubuntu
-      versions:
-        - all
+        - bullseye
 
 dependencies: []
 
