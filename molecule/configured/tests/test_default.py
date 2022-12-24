@@ -25,8 +25,7 @@ def pp_json(json_thing, sort=True, indents=2):
 
 
 def base_directory():
-    """
-    """
+    """ ... """
     cwd = os.getcwd()
 
     if ('group_vars' in os.listdir(cwd)):
@@ -34,23 +33,23 @@ def base_directory():
         molecule_directory = "."
     else:
         directory = "."
-        molecule_directory = f"molecule/{os.environ.get('MOLECULE_SCENARIO_NAME')}"
+        molecule_directory = "molecule/{}".format(os.environ.get('MOLECULE_SCENARIO_NAME'))
 
     return directory, molecule_directory
 
 
 def read_ansible_yaml(file_name, role_name):
-    """
-    """
+    ext_arr = ["yml", "yaml"]
+
     read_file = None
 
-    for e in ["yml", "yaml"]:
+    for e in ext_arr:
         test_file = "{}.{}".format(file_name, e)
         if os.path.isfile(test_file):
             read_file = test_file
             break
 
-    return f"file={read_file} name={role_name}"
+    return "file={} name={}".format(read_file, role_name)
 
 
 @pytest.fixture()
@@ -64,22 +63,21 @@ def get_vars(host):
     """
     base_dir, molecule_dir = base_directory()
     distribution = host.system_info.distribution
-    operation_system = None
 
     if distribution in ['debian', 'ubuntu']:
-        operation_system = "debian"
+        os = "debian"
     elif distribution in ['redhat', 'ol', 'centos', 'rocky', 'almalinux']:
-        operation_system = "redhat"
-    elif distribution in ['arch', 'artix']:
-        operation_system = f"{distribution}linux"
+        os = "redhat"
+    elif distribution in ['arch']:
+        os = "archlinux"
 
     # print(" -> {} / {}".format(distribution, os))
     # print(" -> {}".format(base_dir))
 
-    file_defaults      = read_ansible_yaml(f"{base_dir}/defaults/main", "role_defaults")
-    file_vars          = read_ansible_yaml(f"{base_dir}/vars/main", "role_vars")
-    file_distribution  = read_ansible_yaml(f"{base_dir}/vars/{operation_system}", "role_distribution")
-    file_molecule      = read_ansible_yaml(f"{molecule_dir}/group_vars/all/vars", "test_vars")
+    file_defaults      = read_ansible_yaml("{}/defaults/main".format(base_dir), "role_defaults")
+    file_vars          = read_ansible_yaml("{}/vars/main".format(base_dir), "role_vars")
+    file_distribution  = read_ansible_yaml("{}/vars/{}".format(base_dir, os), "role_distribution")
+    file_molecule      = read_ansible_yaml("{}/group_vars/all/vars".format(molecule_dir), "test_vars")
     # file_host_molecule = read_ansible_yaml("{}/host_vars/{}/vars".format(base_dir, HOST), "host_vars")
 
     defaults_vars      = host.ansible("include_vars", file_defaults).get("ansible_facts").get("role_defaults")
@@ -98,13 +96,6 @@ def get_vars(host):
     result = templar.template(ansible_vars, fail_on_undefined=False)
 
     return result
-
-
-def local_facts(host):
-    """
-      return local facts
-    """
-    return host.ansible("setup").get("ansible_facts").get("ansible_local").get("chrony")
 
 
 def test_files(host, get_vars):
@@ -147,14 +138,13 @@ def test_service(host, get_vars):
 def test_open_port(host, get_vars):
     """
     """
-    # version = local_facts(host).get("major_version")
-
     for i in host.socket.get_listening_sockets():
         print(i)
+
+    pp_json(get_vars)
 
     service = host.socket("udp://{0}:{1}".format("127.0.0.1", "323"))
     assert service.is_listening
 
-    # if int(version) > 3:
-    #     service = host.socket("udp://{0}:{1}".format("0.0.0.0", "123"))
-    #     assert service.is_listening
+    service = host.socket("udp://{0}:{1}".format("0.0.0.0", "123"))
+    assert service.is_listening

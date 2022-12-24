@@ -1,7 +1,7 @@
 ---
 
 - name: install package
-  package:
+  ansible.builtin.package:
     name: "{{ chrony_packages }}"
     state: present
 
@@ -13,20 +13,20 @@
   register: chrony_information
 
 - name: define chrony version
-  set_fact:
+  ansible.builtin.set_fact:
     chrony_version: "{{ chrony_information.version }}"
     chrony_major_version: "{{ chrony_information.major_version }}"
   when:
     - chrony_information.rc == 0
 
 - name: create local facts
-  template:
+  ansible.builtin.template:
     src: ansible_facts.j2
     dest: /etc/ansible/facts.d/chrony.fact
     mode: 0755
 
 - name: disable conflicting services
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     state: stopped
     enabled: false

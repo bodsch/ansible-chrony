@@ -1,0 +1,69 @@
+---
+name: configured chrony
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "code linter"
+    types:
+      - completed
+
+defaults:
+  run:
+    working-directory: 'ansible-chrony'
+
+jobs:
+  deb:
+    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - debian:11
+        ansible-version:
+          - '7.0'
+        python:
+          - '3.10'
+        scenario:
+          - configured
+
+    steps:
+      - name: check out the codebase.
+        uses: actions/checkout@v3
+        with:
+          path: 'ansible-chrony'
+
+      - name: 🐍 set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ matrix.python }}"
+
+      - name: disable AppArmor
+        run: |
+            set -x
+            sudo apt-get install apparmor-profiles
+            sudo ln -s /etc/apparmor.d/usr.sbin.chronyd /etc/apparmor.d/disable/
+            sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.chronyd
+
+      - name: install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r test-requirements.txt
+
+      - name: test with tox
+        run: |
+          make \
+            test \
+            -e TOX_SCENARIO="${{ matrix.scenario }}" \
+            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
+            -e DISTRIBUTION="${{ matrix.image }}"
+
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          DISTRIBUTION: ${{ matrix.image }}

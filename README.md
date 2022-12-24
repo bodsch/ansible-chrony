@@ -3,6 +3,16 @@
 
 Ansible role to install and configure chrony on various linux systems.
 
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bodsch/ansible-chrony/main.yml?branch=main)][ci]
+[![GitHub issues](https://img.shields.io/github/issues/bodsch/ansible-chrony)][issues]
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/bodsch/ansible-chrony)][releases]
+[![Ansible Quality Score](https://img.shields.io/ansible/quality/50067?label=role%20quality)][quality]
+
+[ci]: https://github.com/bodsch/ansible-chrony/actions
+[issues]: https://github.com/bodsch/ansible-chrony/issues?q=is%3Aopen+is%3Aissue
+[releases]: https://github.com/bodsch/ansible-chrony/releases
+[quality]: https://galaxy.ansible.com/bodsch/chrony
+
 ## Requirements & Dependencies
 
 
@@ -18,7 +28,7 @@ Tested on
     - Alma Linux 8
     - Rocky Linux 8
     - Oracle Linux 8
-    
+
 ## Configuration
 
 ```yaml

@@ -65,7 +65,7 @@ class ChronyCmd(object):
             # self.module.log(msg=f"   version: '{version}'")
             # self.module.log(msg=f"   major_version: '{major_version}'")
 
-            if(rc == 0):
+            if (rc == 0):
                 return dict(
                     rc = 0,
                     failed = False,

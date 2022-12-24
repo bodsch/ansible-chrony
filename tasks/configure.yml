@@ -1,25 +1,25 @@
 ---
 
-- name: create systemd
+- name: systemd
+  when:
+    - ansible_service_mgr | lower == "systemd"
   block:
     - name: ensure chronyd.service.d is present
-      file:
+      ansible.builtin.file:
         dest: /etc/systemd/system/chronyd.service.d
         state: directory
         mode: 0750
 
     - name: create overwrite.conf for systemd
-      template:
+      ansible.builtin.template:
         src: init/systemd/overwrite.conf.j2
         dest: "/etc/systemd/system/chronyd.service.d/overwrite.conf"
         mode: 0444
       notify:
         - reload systemctl daemon
-  when:
-    - ansible_service_mgr | lower == "systemd"
 
 - name: create logging directory
-  file:
+  ansible.builtin.file:
     path: "{{ chrony_config.log.directory }}"
     state: directory
     owner: "{{ chrony_user }}"
@@ -27,7 +27,7 @@
     mode: 0775
 
 - name: create sysconfig directory
-  file:
+  ansible.builtin.file:
     path: "{{ chrony_system_config.file | dirname }}"
     state: directory
     owner: root
@@ -35,7 +35,7 @@
     mode: 0755
 
 - name: create configuration directory
-  file:
+  ansible.builtin.file:
     path: "{{ chrony_config.conf_directory }}"
     state: directory
     owner: root
@@ -46,7 +46,7 @@
     - chrony_config.conf_directory | length > 0
 
 - name: create default config
-  template:
+  ansible.builtin.template:
     src: "{{ chrony_system_config.template }}"
     dest: "{{ chrony_system_config.file }}"
     owner: root
@@ -56,7 +56,7 @@
     - restart service
 
 - name: create configuration directory
-  file:
+  ansible.builtin.file:
     path: "{{ chrony_config_file | dirname }}"
     state: directory
     owner: root
@@ -64,7 +64,7 @@
     mode: 0755
 
 - name: create chrony configuration
-  template:
+  ansible.builtin.template:
     src: chrony.conf.j2
     dest: "{{ chrony_config_file }}"
     owner: root

@@ -11,17 +11,18 @@ from ansible.module_utils.basic import AnsibleModule
 
 class JournalCtl(object):
     """
-      Main Class
+    Main Class
     """
+
     module = None
 
     def __init__(self, module):
         """
-          Initialize all needed Variables
+        Initialize all needed Variables
         """
         self.module = module
 
-        self._journalctl = module.get_bin_path('journalctl', True)
+        self._journalctl = module.get_bin_path("journalctl", True)
 
         self.unit = module.params.get("unit")
         self.identifier = module.params.get("identifier")
@@ -40,7 +41,7 @@ class JournalCtl(object):
 
     def run(self):
         """
-          runner
+        runner
         """
         result = dict(
             rc=1,
@@ -54,10 +55,10 @@ class JournalCtl(object):
 
     def journalctl_lines(self):
         """
-            journalctl --help
-            journalctl [OPTIONS...] [MATCHES...]
+        journalctl --help
+        journalctl [OPTIONS...] [MATCHES...]
 
-            Query the journal.
+        Query the journal.
 
         """
         args = []
@@ -94,8 +95,7 @@ class JournalCtl(object):
         )
 
     def _exec(self, args):
-        """
-        """
+        """ """
         rc, out, err = self.module.run_command(args, check_rc=False)
 
         self.module.log(msg="  rc : '{}'".format(rc))
@@ -110,31 +110,13 @@ class JournalCtl(object):
 
 
 def main():
-
     module = AnsibleModule(
         argument_spec=dict(
-            identifier=dict(
-                required=False,
-                type="str"
-            ),
-            unit=dict(
-                required=False,
-                type="str"
-            ),
-            lines=dict(
-                required=False,
-                type='int'
-            ),
-            reverse=dict(
-                required=False,
-                default=False,
-                type='bool'
-            ),
-            arguments=dict(
-                required=False,
-                default=[],
-                type=list
-            )
+            identifier=dict(required=False, type="str"),
+            unit=dict(required=False, type="str"),
+            lines=dict(required=False, type="int"),
+            reverse=dict(required=False, default=False, type="bool"),
+            arguments=dict(required=False, default=[], type=list),
         ),
         supports_check_mode=True,
     )
@@ -148,5 +130,5 @@ def main():
 
 
 # import module snippets
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
