@@ -13,7 +13,7 @@
     state: restarted
   register: restarted
   notify:
-    - journalctl
+    - query the systemd journal
 
 - name: query the systemd journal
   bodsch.core.journalctl:
