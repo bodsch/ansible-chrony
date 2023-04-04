@@ -6,9 +6,4 @@ then
   TOX_ARGS="--scenario-name ${TOX_SCENARIO}"
 fi
 
-if [ -n "${TOX_VERBOSE}" ]
-then
-  TOX_ARGS="${TOX_ARGS} -- ${TOX_VERBOSE}"
-fi
-
 TOX_OPTS="-e ${TOX_ANSIBLE}"
