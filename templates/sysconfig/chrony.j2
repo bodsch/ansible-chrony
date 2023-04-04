@@ -6,7 +6,7 @@
 # the chrony daemon without editing the init script or service file.
 
 # Options to pass to chrony.
-OPTIONS="
+OPTIONS=" \
   -F 1 \
   -U \
   -l {{ chrony_config.log.directory }}/chrony.log \

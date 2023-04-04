@@ -6,10 +6,27 @@
     force: true
   when:
     - ansible_service_mgr == 'systemd'
+  notify:
+    - journalctl
 
 - name: restart service
   ansible.builtin.service:
     name: "{{ chrony_service.name }}"
     state: restarted
+  register: restarted
+  notify:
+    - debug
+    - journalctl
+
+- name: journalctl
+  journalctl:
+    identifier: "{{ chrony_defaults_service.name }}"
+    lines: 50
+  register: journalctl
+
+
+- name: debug
+  debug:
+    msg: "{{ restarted }}"
 
 ...

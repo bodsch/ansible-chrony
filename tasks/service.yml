@@ -8,5 +8,6 @@
     name: "{{ chrony_service.name }}"
     state: "{{ chrony_service.state | default('started') }}"
     enabled: "{{ chrony_service.enabled | default(true) | bool }}"
-
+  notify:
+    - journalctl
 ...

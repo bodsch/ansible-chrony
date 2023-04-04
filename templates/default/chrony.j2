@@ -2,20 +2,20 @@
 # {{ ansible_managed }}
 
 # Options to pass to chrony.
-DAEMON_OPTS="
+DAEMON_OPTS=" \
 {% if chrony_daemon_args.use_ipv4_only is defined and
       chrony_daemon_args.use_ipv4_only | string | length > 0 and
-      chrony_daemon_args.use_ipv4_only %}
+      chrony_daemon_args.use_ipv4_only | bool %}
   -4 \
 {% endif %}
 {% if chrony_daemon_args.use_ipv6_only is defined and
       chrony_daemon_args.use_ipv6_only | string | length > 0 and
-      chrony_daemon_args.use_ipv6_only %}
+      chrony_daemon_args.use_ipv6_only | bool  %}
   -6 \
 {% endif %}
 {% if chrony_daemon_args.run_as_daemon is defined and
       chrony_daemon_args.run_as_daemon | string | length > 0 and
-      not chrony_daemon_args.run_as_daemon %}
+      not chrony_daemon_args.run_as_daemon | bool  %}
   -d \
 {% endif %}
 {% if chrony_config.log.directory is defined and
@@ -30,7 +30,8 @@ DAEMON_OPTS="
   {% endif %}
 {%endif %}
 {% if chrony_daemon_args.reload_dump_files is defined and
-      chrony_daemon_args.reload_dump_files %}
+      chrony_daemon_args.reload_dump_files | string | length > 0 and
+      chrony_daemon_args.reload_dump_files | bool  %}
   -r \
 {% endif %}
 {% if chrony_major_version | int >= 4 %}
@@ -39,7 +40,8 @@ DAEMON_OPTS="
   -F {{ chrony_daemon_args.seccomp_filter_level }} \
   {% endif %}
   {% if chrony_daemon_args.dont_check_for_root is defined and
-        chrony_daemon_args.dont_check_for_root %}
+        chrony_daemon_args.dont_check_for_root | string | length > 0 and
+        chrony_daemon_args.dont_check_for_root | bool %}
   -U \
   {% endif %}
   {% if chrony_daemon_args.run_as_user is defined and

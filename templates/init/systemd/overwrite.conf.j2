@@ -3,7 +3,7 @@ EnvironmentFile         =
 EnvironmentFile         = -{{ chrony_system_config.file }}
 
 ExecStartPre            = mkdir -vp /run/chrony
-ExecStartPre            = chmod g+rwx,o-rwx /run/chrony
+ExecStartPre            = chmod g+rwx,o+rw /run/chrony
 ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
 {% if chrony_config.log.directory is defined and
       chrony_config.log.directory | string | length > 0 %}
