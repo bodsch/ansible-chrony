@@ -15,12 +15,13 @@
   notify:
     - journalctl
 
-- name: journalctl
-  journalctl:
-    identifier: "{{ chrony_defaults_service.name }}"
+- name: query the systemd journal
+  bodsch.core.journalctl:
+    identifier: chrony
     lines: 50
   register: journalctl
   when:
+    - chrony_query_journald
     - ansible_service_mgr == 'systemd'
 
 ...

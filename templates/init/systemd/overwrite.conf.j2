@@ -12,7 +12,6 @@ ExecStartPre            = chown --recursive {{ chrony_user }}:{{ chrony_group }}
 ExecStartPre            = chmod u+rw,g+rw,o+rw {{ chrony_config.log.directory }}/chrony.log
 {% endif %}
 
-
 ExecStart               =
 ExecStart               = {{ chrony_service.executable }} $DAEMON_OPTS
 

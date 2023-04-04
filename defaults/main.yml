@@ -1,5 +1,7 @@
 ---
 
+chrony_query_journald: false
+
 chrony_service: {}
 
 chrony_config: {}
