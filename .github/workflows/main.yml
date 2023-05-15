@@ -24,9 +24,7 @@ jobs:
           - archlinux:latest
           - artixlinux:latest
         ansible-version:
-          - '5.1'
-          - '6.1'
-          - '7.0'
+          - '6.7'
         python:
           - '3.10'
           - '3.11'
@@ -72,9 +70,7 @@ jobs:
         image:
           - debian:11
         ansible-version:
-          - '5.1'
-          - '6.1'
-          - '7.0'
+          - '6.7'
         python:
           # '3.x'
           - '3.10'
@@ -123,7 +119,7 @@ jobs:
           - rockylinux:8
           - almalinux:8
         ansible-version:
-          - '5.1'
+          - '6.7'
         python:
           # '3.x'
           - '3.10'
