@@ -19,11 +19,12 @@
   when:
     - chrony_information.rc == 0
 
-- name: create local facts
-  ansible.builtin.template:
-    src: ansible_facts.j2
-    dest: /etc/ansible/facts.d/chrony.fact
-    mode: 0755
+- name: create custom fact file
+  bodsch.core.facts:
+    name: chrony
+    facts:
+      version: "{{ chrony_version }}"
+      major_version: "{{ chrony_major_version }}"
 
 - name: disable conflicting services
   ansible.builtin.service:
