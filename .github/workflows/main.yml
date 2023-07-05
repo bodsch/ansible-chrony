@@ -69,6 +69,7 @@ jobs:
       matrix:
         image:
           - debian:11
+          - debian:12
         ansible-version:
           - '6.7'
         python:
@@ -83,6 +84,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: 'ansible-chrony'
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: 🐍 set up python
         uses: actions/setup-python@v4
@@ -93,54 +95,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r test-requirements.txt
-
-      - name: test with tox
-        run: |
-          make \
-            test \
-            -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
-            -e DISTRIBUTION="${{ matrix.image }}"
-
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          DISTRIBUTION: ${{ matrix.image }}
-
-  rpm:
-    name: "${{ matrix.image }} / ansible: ${{ matrix.ansible-version }}"
-    runs-on: ubuntu-20.04
-    if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - oraclelinux:8
-          - rockylinux:8
-          - almalinux:8
-        ansible-version:
-          - '6.7'
-        python:
-          # '3.x'
-          - '3.10'
-        scenario:
-          - default
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v3
-        with:
-          path: 'ansible-chrony'
-
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-
-      - name: 🐍 set up python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "${{ matrix.python }}"
 
       - name: test with tox
         run: |
