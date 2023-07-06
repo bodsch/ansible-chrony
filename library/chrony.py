@@ -23,7 +23,7 @@ class ChronyCmd(object):
         self.command    = module.params.get("command")
         self.parameters = module.params.get("parameters")
 
-        self._syslog_ng_bin = module.get_bin_path(self.command, True)
+        self._chrony_bin = module.get_bin_path(self.command, True)
 
     def run(self):
         ''' ... '''
@@ -34,7 +34,7 @@ class ChronyCmd(object):
 
         parameter_list = self._flatten_parameter()
 
-        if not self._syslog_ng_bin:
+        if not self._chrony_bin:
             return dict(
                 rc = 1,
                 failed = True,
@@ -42,19 +42,16 @@ class ChronyCmd(object):
             )
 
         args = []
-        args.append(self._syslog_ng_bin)
+        args.append(self._chrony_bin)
 
         if len(parameter_list) > 0:
             for arg in parameter_list:
                 args.append(arg)
 
-        self.module.log(msg=f" - args {args}")
-
         rc, out, err = self._exec(args)
 
         if '--version' in parameter_list:
             """
-              get version"
             """
             pattern = re.compile(r'^chronyd.*version (?P<version>\d+(\.\d+){0,2}(\.\*)?) .*', re.MULTILINE)
             version = re.search(pattern, out)
@@ -62,10 +59,7 @@ class ChronyCmd(object):
 
             major_version = version.split('.')[0]
 
-            # self.module.log(msg=f"   version: '{version}'")
-            # self.module.log(msg=f"   major_version: '{major_version}'")
-
-            if (rc == 0):
+            if rc == 0:
                 return dict(
                     rc = 0,
                     failed = False,
@@ -80,9 +74,7 @@ class ChronyCmd(object):
         """
         """
         rc, out, err = self.module.run_command(args, check_rc=True)
-        # self.module.log(msg="  rc : '{}'".format(rc))
-        # self.module.log(msg="  out: '{}' ({})".format(out, type(out)))
-        # self.module.log(msg="  err: '{}'".format(err))
+
         return rc, out, err
 
     def _flatten_parameter(self):
