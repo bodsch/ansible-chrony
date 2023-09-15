@@ -86,6 +86,14 @@
     - service_status is defined
     - service_status.failed
   block:
+
+    - name: list /var/log
+      ansible.builtin.shell:
+        cmd: |
+          ls -lth /var/log ;
+          ls -lth /var/log/chrony ;
+        chdir: /var/log
+
     - name: detect error
       when:
         - ansible_service_mgr == 'systemd'
