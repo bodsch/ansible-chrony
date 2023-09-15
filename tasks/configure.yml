@@ -4,22 +4,22 @@
   when:
     - ansible_service_mgr | lower == "systemd"
   block:
-    - name: ensure chronyd.service.d is present
+    - name: ensure {{ chrony_service.name }}.service.d is present
       ansible.builtin.file:
-        dest: /etc/systemd/system/chronyd.service.d
         state: directory
+        dest: "/etc/systemd/system/{{ chrony_service.name }}.service.d"
         mode: 0750
 
     - name: create overwrite.conf for systemd
       ansible.builtin.template:
         src: init/systemd/overwrite.conf.j2
-        dest: "/etc/systemd/system/chronyd.service.d/overwrite.conf"
+        dest: "/etc/systemd/system/{{ chrony_service.name }}.service.d/overwrite.conf"
         mode: 0444
       notify:
         - reload systemctl daemon
 
-    - name: flush handlers
-      ansible.builtin.meta: flush_handlers
+- name: flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: create logging directory
   ansible.builtin.file:
@@ -90,12 +90,13 @@
     - service_status.failed
   block:
 
-    - name: list /var/log
+    - name: list /var
       ansible.builtin.shell:
         cmd: |
-          ls -lth /var/log ;
-          ls -lth /var/log/chrony ;
-        chdir: /var/log
+          ls -lth /var/log &&
+          ls -lth /var/log/chrony &&
+          ls -lth /var/run
+        chdir: /var
 
     - name: detect error
       when:
