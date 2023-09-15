@@ -18,9 +18,11 @@ Ansible role to install and configure chrony on various linux systems.
 Ansible Collections
 
 - [bodsch.core](https://github.com/bodsch/ansible-collection-core)
+- [bodsch.systemd](https://github.com/bodsch/ansible-collection-systemd)
 
 ```bash
 ansible-galaxy collection install bodsch.core
+ansible-galaxy collection install bodsch.systemd
 ```
 or
 ```bash
@@ -119,7 +121,7 @@ chrony_daemon_args:
 ```
 
 
-[example](molecule/default/group_vars/all/vars.yml)
+[example](molecule/configured/group_vars/all/vars.yml)
 
     
 ## Contribution
@@ -141,5 +143,5 @@ If you want to use something stable, please use a [Tagged Version](https://githu
 
 [Apache](LICENSE)
 
-`FREE SOFTWARE, HELL YEAH!`
+**FREE SOFTWARE, HELL YEAH!**
     

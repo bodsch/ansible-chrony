@@ -1,3 +1,5 @@
 ---
 
+chrony_query_journald: true
+
 ...

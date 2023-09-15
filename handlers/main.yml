@@ -11,17 +11,28 @@
   ansible.builtin.service:
     name: "{{ chrony_service.name }}"
     state: restarted
+  ignore_errors: true
   register: restarted
   notify:
     - query the systemd journal
 
 - name: query the systemd journal
-  bodsch.core.journalctl:
+  bodsch.systemd.journalctl:
     identifier: chrony
-    lines: 50
+    lines: 150
   register: journalctl
   when:
+    - restarted is defined
+    - restarted.failed
     - chrony_query_journald
     - ansible_service_mgr == 'systemd'
+  notify:
+    - journalctl output
+
+- name: journalctl output
+  ansible.builtin.debug:
+    msg: "{{ journalctl.stdout }}"
+  when:
+    journalctl.stdout is defined
 
 ...
