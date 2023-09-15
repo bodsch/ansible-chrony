@@ -1,8 +1,5 @@
 ---
 
-- name: flush handlers at this point to avoid double restart
-  ansible.builtin.meta: flush_handlers
-
 - name: start and enable service
   ansible.builtin.service:
     name: "{{ chrony_service.name }}"

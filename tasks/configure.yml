@@ -74,4 +74,42 @@
   notify:
     - restart service
 
+- name: start chrony first time
+  ansible.builtin.service:
+    name: '{{ chrony_service.name }}'
+    state: started
+  ignore_errors: true
+  register: service_status
+
+- name: detect error
+  when:
+    - service_status is defined
+    - service_status.failed
+  block:
+    - name: detect error
+      when:
+        - ansible_service_mgr == 'systemd'
+      block:
+        - name: systemd unit
+          ansible.builtin.debug:
+            msg: "{{ service_status }}"
+
+        - name: wait 2 seconds
+          ansible.builtin.pause:
+            seconds: 2
+
+        - name: get journal log
+          bodsch.core.journalctl:
+            lines: 250
+          register: chrony_journal
+
+        - name: journalctl output
+          ansible.builtin.debug:
+            msg: "{{ chrony_journal.stdout }}"
+          when:
+            - chrony_journal.stdout is defined
+
+- name: flush handlers
+  ansible.builtin.meta: flush_handlers
+
 ...
