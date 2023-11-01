@@ -21,7 +21,8 @@ jobs:
       - name: Check out the codebase
         uses: actions/checkout@v3
         with:
-          path: 'ansible-glauth'
+          path: 'ansible-chrony'
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: galaxy
         uses: robertdebock/galaxy-action@1.2.1
