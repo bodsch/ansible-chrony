@@ -90,7 +90,7 @@
     - service_status.failed
   block:
 
-    - name: list /var
+    - name: list /var  # noqa no-changed-when
       ansible.builtin.shell:
         cmd: |
           ls -lth /var/log &&

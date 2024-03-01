@@ -27,6 +27,7 @@ platforms:
       - /var/lib/containerd
     capabilities:
       - SYS_TIME
+      - SYS_ADMIN
     tmpfs:
       - /run
       - /tmp
