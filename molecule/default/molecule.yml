@@ -20,9 +20,7 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - /var/lib/containerd
     capabilities:
-      - SYS_TIME
-      - SYS_ADMIN
-      - DAC_READ_SEARCH
+      - ALL
     tmpfs:
       - /run
       - /tmp
