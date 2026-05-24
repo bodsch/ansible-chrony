@@ -1,7 +1,0 @@
----
-
-- name: apparmor
-  src: https://github.com/bodsch/ansible-apparmor
-  scm: git
-
-...

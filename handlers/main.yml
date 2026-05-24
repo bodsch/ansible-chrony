@@ -5,7 +5,7 @@
     daemon_reload: true
     force: true
   when:
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts.service_mgr == 'systemd'
 
 - name: restart service
   ansible.builtin.service:
@@ -25,7 +25,7 @@
     - restarted is defined
     - restarted.failed
     - chrony_query_journald
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts.service_mgr == 'systemd'
   notify:
     - journalctl output
 
