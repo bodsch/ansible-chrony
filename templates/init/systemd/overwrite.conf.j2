@@ -2,26 +2,36 @@
 # {{ ansible_managed }}
 
 [Service]
+# chronyd forks into the background (no '-n' in DAEMON_OPTS),
+# so the unit type must match - regardless of the distribution default
+# (Debian: forking / Arch Linux: notify with 'chronyd -n')
+Type                    = forking
+PIDFile                 = /run/chrony/chronyd.pid
+
 EnvironmentFile         =
 EnvironmentFile         = {{ chrony_system_config.file }}
 
-ExecStartPre            = mkdir -vp /run/chrony
-ExecStartPre            = chmod u+rwx,g+rx,o-rwx /run/chrony
-ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
+# '+' = run with full privileges, even if the unit sets 'User=' (Debian: _chrony)
+ExecStartPre            = +mkdir -vp /run/chrony
+ExecStartPre            = +chmod u+rwx,g+rx,o-rwx /run/chrony
+ExecStartPre            = +chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
 {% if chrony_config.log.directory is defined and
       chrony_config.log.directory | string | length > 0 %}
 
-ExecStartPre            = chmod u+rwx,g+rwx,o+rw {{ chrony_config.log.directory }}
-ExecStartPre            = touch {{ chrony_config.log.directory }}/chrony.log
-ExecStartPre            = chown --recursive {{ chrony_user }}:{{ chrony_group }} {{ chrony_config.log.directory }}
-ExecStartPre            = chmod u+rw,g+rw,o+rw {{ chrony_config.log.directory }}/chrony.log
+ExecStartPre            = +chmod 0750 {{ chrony_config.log.directory }}
+ExecStartPre            = +touch {{ chrony_config.log.directory }}/chrony.log
+ExecStartPre            = +chown --recursive {{ chrony_user }}:{{ chrony_group }} {{ chrony_config.log.directory }}
+ExecStartPre            = +chmod u+rw,g+rw,o+rw {{ chrony_config.log.directory }}/chrony.log
 {% endif %}
 
-ReadWritePaths          = /run/chrony /var/lib/chrony {{ chrony_config.log.directory }}
+ReadWritePaths          = -/run/chrony -/var/lib/chrony{% if chrony_config.log.directory | default('') | string | length > 0 %} -{{ chrony_config.log.directory }}{% endif %}
 
-# Daemon is started as root, but still sandboxed
+
+# Daemon is started as root, but still sandboxed.
+# '!' ignores 'User=' from the distribution unit (Debian: User=_chrony),
+# chronyd drops its privileges itself via '-u {{ chrony_user }}'
 ExecStart               =
-ExecStart               = {{ chrony_service.executable }} $DAEMON_OPTS
+ExecStart               = !{{ chrony_service.executable }} $DAEMON_OPTS
 
 SyslogIdentifier        =
 SyslogIdentifier        = chrony

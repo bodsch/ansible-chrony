@@ -35,6 +35,10 @@ on:
       - "!README.md"
       - "tasks/**"
 
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   pycodestyle:
     runs-on: ubuntu-latest
@@ -62,7 +66,7 @@ jobs:
 
       - name: Lint code.
         run: |
-          pycodestyle plugins/ --config=.config/pycodestyle.cfg --statistics --count --exclude=test_*.py --exclude=hooks/*.py
+          pycodestyle library/ --config=.config/pycodestyle.cfg --statistics --count --exclude=test_*.py --exclude=hooks/*.py
 
 
 ...

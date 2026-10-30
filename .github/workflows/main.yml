@@ -12,6 +12,10 @@ defaults:
   run:
     working-directory: 'ansible-chrony'
 
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 env:
   PY_COLORS: '1'
   ANSIBLE_FORCE_COLOR: '1'
