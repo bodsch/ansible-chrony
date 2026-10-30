@@ -99,6 +99,26 @@
           ls -lth /var/run
         chdir: /var
 
+    - name: stats
+      ansible.builtin.stat:
+        path: /var/log/chrony/chrony.log
+      register: chrony_stat_log
+
+    - name: slurp
+      ansible.builtin.slurp:
+        src: /var/log/chrony/chrony.log
+      register: chrony_raw_log
+      when:
+        - chrony_stat_log.stat.exists | default(false) | bool
+      no_log: true
+
+    - name: expose
+      ansible.builtin.debug:
+        msg: "{{ chrony_raw_log.content | b64decode | trim }}"
+      when:
+        - chrony_stat_log.stat.exists | default(false) | bool
+        - chrony_raw_log is defined
+
     - name: detect error
       when:
         - ansible_facts.service_mgr == 'systemd'

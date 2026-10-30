@@ -1,21 +1,27 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
 [Service]
 EnvironmentFile         =
-EnvironmentFile         = -{{ chrony_system_config.file }}
+EnvironmentFile         = {{ chrony_system_config.file }}
 
 ExecStartPre            = mkdir -vp /run/chrony
-ExecStartPre            = chmod g+rwx,o+rw /run/chrony
+ExecStartPre            = chmod u+rwx,g+rx,o-rwx /run/chrony
 ExecStartPre            = chown {{ chrony_user }}:{{ chrony_group }} /run/chrony
 {% if chrony_config.log.directory is defined and
       chrony_config.log.directory | string | length > 0 %}
+
 ExecStartPre            = chmod u+rwx,g+rwx,o+rw {{ chrony_config.log.directory }}
 ExecStartPre            = touch {{ chrony_config.log.directory }}/chrony.log
 ExecStartPre            = chown --recursive {{ chrony_user }}:{{ chrony_group }} {{ chrony_config.log.directory }}
 ExecStartPre            = chmod u+rw,g+rw,o+rw {{ chrony_config.log.directory }}/chrony.log
 {% endif %}
 
+ReadWritePaths          = /run/chrony /var/lib/chrony {{ chrony_config.log.directory }}
+
 # Daemon is started as root, but still sandboxed
 ExecStart               =
-ExecStart               = !{{ chrony_service.executable }} $DAEMON_OPTS
+ExecStart               = {{ chrony_service.executable }} $DAEMON_OPTS
 
 SyslogIdentifier        =
 SyslogIdentifier        = chrony

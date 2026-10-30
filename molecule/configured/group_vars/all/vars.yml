@@ -1,5 +1,8 @@
 ---
 
+chrony_daemon_args:
+  logging_threshold: 3
+
 chrony_config:
   conf_directory: /etc/chrony/conf.d
   log:
@@ -7,7 +10,7 @@ chrony_config:
       - statistics
     directory: /var/log/chrony
   drift_file: /var/lib/chrony/chrony.drift
-  key_file: /etc/chrony/chrony.keys
+  # key_file: /etc/chrony/chrony.keys
   nts_dump_directory: /var/lib/chrony
   source_directories: []
   ntp_pools:
@@ -17,6 +20,7 @@ chrony_config:
 
   bind_cmd_addresses:
     - 127.0.0.1
+
   allow:
     - 127.0.0.1/32
     - 192.168.0.0/24

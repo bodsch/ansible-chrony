@@ -16,30 +16,23 @@ class ChronyCmd(object):
 
     def __init__(self, module):
         """
-          Initialize all needed Variables
+        Initialize all needed Variables
         """
         self.module = module
 
-        self.command    = module.params.get("command")
+        self.command = module.params.get("command")
         self.parameters = module.params.get("parameters")
 
         self._chrony_bin = module.get_bin_path(self.command, True)
 
     def run(self):
-        ''' ... '''
-        result = dict(
-            failed=True,
-            ansible_module_results='failed'
-        )
+        """..."""
+        result = dict(failed=True, ansible_module_results="failed")
 
         parameter_list = self._flatten_parameter()
 
         if not self._chrony_bin:
-            return dict(
-                rc = 1,
-                failed = True,
-                msg = "no installed chrony found"
-            )
+            return dict(rc=1, failed=True, msg="no installed chrony found")
 
         args = []
         args.append(self._chrony_bin)
@@ -50,51 +43,53 @@ class ChronyCmd(object):
 
         rc, out, err = self._exec(args)
 
-        if '--version' in parameter_list:
-            """
-            """
-            pattern = re.compile(r'^chronyd.*version (?P<version>\d+(\.\d+){0,2}(\.\*)?) .*', re.MULTILINE)
+        if "--version" in parameter_list:
+            """ """
+            pattern = re.compile(
+                r"^chronyd.*version (?P<version>\d+(\.\d+){0,2}(\.\*)?) .*",
+                re.MULTILINE,
+            )
             version = re.search(pattern, out)
-            version = version.group('version')
+            version = version.group("version")
 
-            major_version = version.split('.')[0]
+            major_version = version.split(".")[0]
 
             if rc == 0:
                 return dict(
-                    rc = 0,
-                    failed = False,
-                    args = args,
-                    version = version,
-                    major_version = major_version
+                    rc=0,
+                    failed=False,
+                    args=args,
+                    version=version,
+                    major_version=major_version,
                 )
 
         return result
 
     def _exec(self, args):
-        """
-        """
+        """ """
         rc, out, err = self.module.run_command(args, check_rc=True)
 
         return rc, out, err
 
     def _flatten_parameter(self):
         """
-          split and flatten parameter list
+        split and flatten parameter list
 
-          input:  ['--validate', '--log-level debug']
-          output: ['--validate', '--log-level', 'debug']
+        input:  ['--validate', '--log-level debug']
+        output: ['--validate', '--log-level', 'debug']
         """
         parameters = []
 
         for _parameter in self.parameters:
-            if ' ' in _parameter:
-                _list = _parameter.split(' ')
+            if " " in _parameter:
+                _list = _parameter.split(" ")
                 for _element in _list:
                     parameters.append(_element)
             else:
                 parameters.append(_parameter)
 
         return parameters
+
 
 # ===========================================
 # Module execution.
@@ -105,14 +100,8 @@ def main():
 
     module = AnsibleModule(
         argument_spec=dict(
-            command=dict(
-                required=True,
-                type='str'
-            ),
-            parameters=dict(
-                required=True,
-                type='list'
-            ),
+            command=dict(required=True, type="str"),
+            parameters=dict(required=True, type="list"),
         ),
         supports_check_mode=True,
     )
@@ -124,5 +113,5 @@ def main():
 
 
 # import module snippets
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

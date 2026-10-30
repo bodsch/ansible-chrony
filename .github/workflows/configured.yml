@@ -26,17 +26,17 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - debian:12
-        python_version:
-          - "3.11"
+          - debian:13
         ansible-version:
-          - '8.5'
+          - '12.3'
+        python_version:
+          - "3.12"
         scenario:
           - configured
 
     steps:
       - name: check out the codebase.
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
         with:
           path: 'ansible-chrony'
           ref: ${{ github.event.workflow_run.head_branch }}

@@ -4,13 +4,6 @@ name: push to ansible galaxy
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows:
-      - "CI"
-    branches:
-      - main
-    types:
-      - completed
 
 jobs:
   galaxy:
@@ -19,7 +12,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Check out the codebase
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
         with:
           path: 'ansible-chrony'
           ref: ${{ github.event.workflow_run.head_branch }}
