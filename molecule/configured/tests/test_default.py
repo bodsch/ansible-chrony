@@ -55,8 +55,6 @@ def test_open_port(host, get_vars):
     for i in host.socket.get_listening_sockets():
         print(i)
 
-    pp_json(get_vars)
-
     service = host.socket("udp://{0}:{1}".format("127.0.0.1", "323"))
     assert service.is_listening
 
