@@ -2,11 +2,39 @@
 name: CI
 
 on:
-  workflow_run:
-    workflows:
-      - "code linter"
-    types:
-      - completed
+  # workflow_run:
+  #   workflows:
+  #     - "code linter"
+  #   types:
+  #     - completed
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'fix/**'
+      - '!doc/**'
+    # paths:
+    #   - 'filter_plugins/*.py'
+    #   - '!.github/workflows/*.yml'
+    #   - '!doc/**'
+    #   - '.config/pycodestyle.cfg'
+  pull_request:
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'fix/**'
+      - '!doc/**'
+    # paths:
+    #   - 'filter_plugins/*.py'
+    #   - '!.github/workflows/*.yml'
+    #   - '!doc/**'
+    #   - '.config/pycodestyle.cfg'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to test'
+        required: false
+        default: 'main'
 
 defaults:
   run:
@@ -43,99 +71,6 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           path: 'ansible-chrony'
-
-      - name: 🐍 set up python
-        uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "${{ matrix.python_version }}"
-
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-
-      - name: force reinstall of community.docker
-        run: |
-          mkdir -p /home/runner/.ansible/collections
-          ansible-galaxy collection install community.docker --force
-
-      - name: test with tox
-        run: |
-          make \
-            test \
-            -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
-            -e DISTRIBUTION="${{ matrix.image }}"
-
-  debian:
-    name: "${{ matrix.image }} / ansible ${{ matrix.ansible-version }} / python ${{ matrix.python_version }}"
-    runs-on: ubuntu-22.04
-    # if: ${{ github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - debian:13
-        ansible-version:
-          - '12.3'
-        python_version:
-          - "3.12"
-        scenario:
-          - default
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v7.0.1
-        with:
-          path: 'ansible-chrony'
-          ref: ${{ github.event.workflow_run.head_branch }}
-
-      - name: 🐍 set up python
-        uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "${{ matrix.python_version }}"
-
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r test-requirements.txt
-
-      - name: force reinstall of community.docker
-        run: |
-          mkdir -p /home/runner/.ansible/collections
-          ansible-galaxy collection install community.docker --force
-
-      - name: test with tox
-        run: |
-          make \
-            test \
-            -e TOX_SCENARIO="${{ matrix.scenario }}" \
-            -e TOX_ANSIBLE="ansible_${{ matrix.ansible-version }}" \
-            -e DISTRIBUTION="${{ matrix.image }}"
-
-  ubuntu:
-    name: "${{ matrix.image }} / ansible ${{ matrix.ansible-version }} / python ${{ matrix.python_version }}"
-    runs-on: ubuntu-22.04
-    needs:
-      - debian
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - ubuntu:24.04
-        ansible-version:
-          - '12.3'
-        python_version:
-          - "3.12"
-        scenario:
-          - default
-
-    steps:
-      - name: check out the codebase.
-        uses: actions/checkout@v7.0.1
-        with:
-          path: 'ansible-chrony'
-          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: 🐍 set up python
         uses: actions/setup-python@v6.2.0
