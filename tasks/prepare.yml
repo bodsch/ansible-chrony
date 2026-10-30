@@ -23,6 +23,7 @@
 - name: update package cache
   ansible.builtin.package:
     update_cache: true
+  changed_when: false
 
 - name: install dependencies
   ansible.builtin.package:
