@@ -73,7 +73,7 @@ jobs:
           path: 'ansible-chrony'
 
       - name: 🐍 set up python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.1.0
         with:
           python-version: "${{ matrix.python_version }}"
 
